@@ -1,0 +1,12 @@
+{
+  "entryPoints": ["lib/ash_generated.ts"],
+  "out": "docs",
+  "name": "Ash TypeScript Client",
+  "readme": "none",
+  "includeVersion": false,
+  "hideGenerator": true,
+  "categorizeByGroup": true,
+  "groupOrder": ["Functions", "Type Aliases", "*"],
+  "exclude": ["**/node_modules/**"],
+  "skipErrorChecking": true
+}

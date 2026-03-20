@@ -7,9 +7,69 @@
 # General application configuration
 import Config
 
+config :ash_typescript,
+  output_file: "assets/js/ash_rpc.ts",
+  run_endpoint: "/rpc/run",
+  validate_endpoint: "/rpc/validate",
+  input_field_formatter: :camel_case,
+  output_field_formatter: :camel_case,
+  require_tenant_parameters: false,
+  generate_zod_schemas: false,
+  generate_phx_channel_rpc_actions: true,
+  generate_validation_functions: true,
+  zod_import_path: "zod",
+  zod_schema_suffix: "ZodSchema",
+  phoenix_import_path: "phoenix"
+
+config :ash,
+  allow_forbidden_field_for_relationships_by_default?: true,
+  include_embedded_source_by_default?: false,
+  show_keysets_for_all_actions?: false,
+  default_page_type: :keyset,
+  policies: [no_filter_static_forbidden_reads?: false],
+  keep_read_action_loads_when_loading?: false,
+  default_actions_require_atomic?: true,
+  read_action_after_action_hooks_in_order?: true,
+  bulk_actions_default_to_errors?: true,
+  transaction_rollback_on_error?: true,
+  known_types: [AshPostgres.Timestamptz, AshPostgres.TimestamptzUsec]
+
+config :spark,
+  formatter: [
+    remove_parens?: true,
+    "Ash.Resource": [
+      section_order: [
+        :admin,
+        :authentication,
+        :token,
+        :user_identity,
+        :postgres,
+        :resource,
+        :code_interface,
+        :actions,
+        :policies,
+        :pub_sub,
+        :preparations,
+        :changes,
+        :validations,
+        :multitenancy,
+        :attributes,
+        :relationships,
+        :calculations,
+        :aggregates,
+        :identities
+      ]
+    ],
+    "Ash.Domain": [
+      section_order: [:admin, :resources, :policies, :authorization, :domain, :execution]
+    ]
+  ]
+
 config :handbooks,
   ecto_repos: [Handbooks.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  ash_domains: [Handbooks.Accounts, Handbooks.Books],
+  ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 
 # Configure the endpoint
 config :handbooks, HandbooksWeb.Endpoint,
@@ -36,7 +96,7 @@ config :esbuild,
   version: "0.25.4",
   handbooks: [
     args:
-      ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
+      ~w(js/index.tsx js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => [Path.expand("../deps", __DIR__), Mix.Project.build_path()]}
   ]

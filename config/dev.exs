@@ -1,10 +1,12 @@
 import Config
+config :ash, policies: [show_policy_breakdowns?: true]
 
 # Configure your database
 config :handbooks, Handbooks.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "admin21",
   hostname: "localhost",
+  port: 5431,
   database: "handbooks_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -68,7 +70,7 @@ config :handbooks, HandbooksWeb.Endpoint,
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :handbooks, dev_routes: true
+config :handbooks, dev_routes: true, token_signing_secret: "Fn+3vHR0fjguxMU+lbzYCy75m0SQQss+"
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

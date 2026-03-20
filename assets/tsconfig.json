@@ -21,10 +21,13 @@
 // Feel free to adjust this configuration however you need.
 {
   "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "*": ["../deps/*"]
     },
+    "lib": ["ES2015", "DOM"],
     "allowJs": true,
     "noEmit": true
   },

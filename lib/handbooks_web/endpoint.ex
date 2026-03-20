@@ -15,6 +15,10 @@ defmodule HandbooksWeb.Endpoint do
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
 
+  socket "/socket", HandbooksWeb.UserSocket,
+    websocket: true,
+    longpoll: false
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # When code reloading is disabled (e.g., in production),
@@ -27,12 +31,23 @@ defmodule HandbooksWeb.Endpoint do
     only: HandbooksWeb.static_paths(),
     raise_on_missing_only: code_reloading?
 
+  if Mix.env() == :dev do
+    plug Tidewave
+  end
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
+    plug AshAi.Mcp.Dev,
+      # For many tools, you will need to set the `protocol_version_statement` to the older version.
+      protocol_version_statement: "2024-11-05",
+      otp_app: :handbooks,
+      path: "/ash_ai/mcp"
+
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
+    plug AshPhoenix.Plug.CheckCodegenStatus
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :handbooks
   end
 

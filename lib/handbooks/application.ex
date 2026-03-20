@@ -12,10 +12,12 @@ defmodule Handbooks.Application do
       Handbooks.Repo,
       {DNSCluster, query: Application.get_env(:handbooks, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Handbooks.PubSub},
+      Handbooks.Presence,
       # Start a worker by calling: Handbooks.Worker.start_link(arg)
       # {Handbooks.Worker, arg},
       # Start to serve requests, typically the last entry
-      HandbooksWeb.Endpoint
+      HandbooksWeb.Endpoint,
+      {AshAuthentication.Supervisor, [otp_app: :handbooks]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
